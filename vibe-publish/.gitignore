@@ -21,6 +21,8 @@ target/
 # default HSQL database files for production mode
 /prodDb.*
 
+
+
 # general HSQL database files
 *Db.properties
 *Db.script
@@ -43,6 +45,7 @@ target/
 target/
 out/
 build/
+.flattened-pom.xml
 
 
 #.gitignore for java

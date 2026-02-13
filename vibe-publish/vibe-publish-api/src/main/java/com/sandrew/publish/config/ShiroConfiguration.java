@@ -1,6 +1,5 @@
 package com.sandrew.publish.config;
 
-
 import com.sandrew.publish.config.shiro.AccountAuthorizationRealm;
 import com.sandrew.publish.config.shiro.MyFormAuthenticationFilter;
 import com.sandrew.publish.config.shiro.separate.DefaultHeaderSessionManager;
@@ -31,21 +30,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *  shiro 配置类
+ * shiro 配置类
  */
 @Configuration
 @Log4j2
-public class ShiroConfiguration
-{
+public class ShiroConfiguration {
 
     /**
      * 配置shiroFilter
      *
      * @return
      */
-    @Bean(name="shiroFilter")
-    public MyShiroFilterFactoryBean shiroFlter()
-    {
+    @Bean(name = "shiroFilter")
+    public MyShiroFilterFactoryBean shiroFlter() {
 
         MyShiroFilterFactoryBean shiroFilter = new MyShiroFilterFactoryBean();
 
@@ -57,8 +54,8 @@ public class ShiroConfiguration
         filters.put("logout", new LogoutFilter());
         filters.put("roles", new RolesAuthorizationFilter());
         filters.put("user", new MyUserFilter());
-        //filters.put("captcha", new CaptchaValidateFilter());  如果需要验证码,打开此过滤器
-//        shiroFilter.setFilters(filters);
+        // filters.put("captcha", new CaptchaValidateFilter()); 如果需要验证码,打开此过滤器
+        // shiroFilter.setFilters(filters);
         shiroFilter.setSecurityManager(securityManager());
 
         Map<String, String> filterChainDefinitionMapping = new LinkedHashMap<String, String>();
@@ -67,7 +64,12 @@ public class ShiroConfiguration
         filterChainDefinitionMapping.put("/generate/**", "anon"); // 生成各类
         filterChainDefinitionMapping.put("/validateToken", "anon"); // 验证token
         filterChainDefinitionMapping.put("/oauth2/sso", "anon"); // oauth2登录
-//        filterChainDefinitionMapping.put("/logout", "logout");
+        // Swagger UI paths — allow unauthenticated access for API documentation
+        filterChainDefinitionMapping.put("/swagger-ui/**", "anon");
+        filterChainDefinitionMapping.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMapping.put("/v3/api-docs/**", "anon");
+        filterChainDefinitionMapping.put("/v3/api-docs.yaml", "anon");
+        // filterChainDefinitionMapping.put("/logout", "logout");
         filterChainDefinitionMapping.put("/login", "authc");
         filterChainDefinitionMapping.put("/**", "user");
 
@@ -79,48 +81,44 @@ public class ShiroConfiguration
     /**
      * @return
      */
-    @Bean(name="securityManager")
-    public SecurityManager securityManager()
-    {
+    @Bean(name = "securityManager")
+    public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm());
         securityManager.setSessionManager(sessionManager());
         return securityManager;
     }
 
-    @Bean(name="realm")
-    //@DependsOn("lifecycleBeanPostProcessor")
-    public AccountAuthorizationRealm realm()
-    {
+    @Bean(name = "realm")
+    // @DependsOn("lifecycleBeanPostProcessor")
+    public AccountAuthorizationRealm realm() {
         AccountAuthorizationRealm accountAuthorizationRealm = new AccountAuthorizationRealm();
-//        IDAASCredentialsMatcher matcher = new IDAASCredentialsMatcher();
+        // IDAASCredentialsMatcher matcher = new IDAASCredentialsMatcher();
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
         matcher.setHashAlgorithmName("MD5");
-//        matcher.setStoredCredentialsHexEncoded(true);
+        // matcher.setStoredCredentialsHexEncoded(true);
         matcher.setHashIterations(1);
         accountAuthorizationRealm.setCredentialsMatcher(matcher);
         return accountAuthorizationRealm;
     }
 
-//    @Bean(name="matcher")
-//    public HashedCredentialsMatcher matcher()
-//    {
-//        IDAASCredentialsMatcher matcher = new IDAASCredentialsMatcher();
-//        matcher.setHashAlgorithmName("MD5");
-//        matcher.setStoredCredentialsHexEncoded(true);
-//        matcher.setHashIterations(1);
-//        return matcher;
-//    }
+    // @Bean(name="matcher")
+    // public HashedCredentialsMatcher matcher()
+    // {
+    // IDAASCredentialsMatcher matcher = new IDAASCredentialsMatcher();
+    // matcher.setHashAlgorithmName("MD5");
+    // matcher.setStoredCredentialsHexEncoded(true);
+    // matcher.setHashIterations(1);
+    // return matcher;
+    // }
 
     @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor()
-    {
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor()
-    {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
         return authorizationAttributeSourceAdvisor;
@@ -128,47 +126,43 @@ public class ShiroConfiguration
 
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator()
-    {
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         return new DefaultAdvisorAutoProxyCreator();
     }
 
     @Bean
-    public MethodInvokingFactoryBean methodInvokingFactoryBean()
-    {
+    public MethodInvokingFactoryBean methodInvokingFactoryBean() {
         MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
         methodInvokingFactoryBean.setStaticMethod("org.apache.shiro.SecurityUtils.setSecurityManager");
         methodInvokingFactoryBean.setArguments(securityManager());
         return methodInvokingFactoryBean;
     }
 
-
     @Bean
-    public DefaultSessionManager sessionManager()
-    {
+    public DefaultSessionManager sessionManager() {
         DefaultHeaderSessionManager sessionManager = new DefaultHeaderSessionManager();
         sessionManager.setDeleteInvalidSessions(true);
-//        sessionManager.setSessionIdCookieEnabled(true);
+        // sessionManager.setSessionIdCookieEnabled(true);
 
         sessionManager.setSessionValidationSchedulerEnabled(false);
-//        sessionManager.setSessionValidationSchedulerEnabled(true);
-//        MySqlSessionValidationScheduler sessionValidationScheduler = sessionValidationScheduler();
-//        sessionValidationScheduler.setSessionManager(sessionManager);
-//        sessionManager.setSessionValidationScheduler(sessionValidationScheduler());
-        sessionManager.setSessionDAO(sessionDAO());      // 使用默认的sessionDao
-//        sessionManager.setSessionIdCookie(sessionIdCookie());
+        // sessionManager.setSessionValidationSchedulerEnabled(true);
+        // MySqlSessionValidationScheduler sessionValidationScheduler =
+        // sessionValidationScheduler();
+        // sessionValidationScheduler.setSessionManager(sessionManager);
+        // sessionManager.setSessionValidationScheduler(sessionValidationScheduler());
+        sessionManager.setSessionDAO(sessionDAO()); // 使用默认的sessionDao
+        // sessionManager.setSessionIdCookie(sessionIdCookie());
         return sessionManager;
     }
 
-
     /**
-     *  自定义sessionDao,将session保存到redis或数据库
+     * 自定义sessionDao,将session保存到redis或数据库
+     * 
      * @return
      */
     @Bean
-    public RedisSessionDAO sessionDAO()
-    {
-//      MySqlSessionDAO sessionDAO = new MySqlSessionDAO();
+    public RedisSessionDAO sessionDAO() {
+        // MySqlSessionDAO sessionDAO = new MySqlSessionDAO();
         RedisSessionDAO sessionDAO = new RedisSessionDAO();
         sessionDAO.setActiveSessionsCacheName("shiro-activeSessionCache");
         sessionDAO.setSessionIdGenerator(sessionIdGenerator());
@@ -176,15 +170,13 @@ public class ShiroConfiguration
     }
 
     @Bean
-    public SessionIdGenerator sessionIdGenerator()
-    {
+    public SessionIdGenerator sessionIdGenerator() {
         SessionIdGenerator sessionIdGenerator = new JavaUuidSessionIdGenerator();
         return sessionIdGenerator;
     }
 
     @Bean
-    public SimpleCookie sessionIdCookie()
-    {
+    public SimpleCookie sessionIdCookie() {
         SimpleCookie simpleCookie = new SimpleCookie("sid");
         simpleCookie.setHttpOnly(true);
         simpleCookie.setMaxAge(-1);
