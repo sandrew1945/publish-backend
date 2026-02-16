@@ -47,6 +47,7 @@ import com.sandrew.publish.core.mybatis.PageQueryBuilder;
 import com.sandrew.publish.core.util.MagicOOO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -239,7 +240,7 @@ public class UserManagerServiceImpl implements UserManagerService
             updateUser.setUpdateDate(new Date());
 
             //如果用户没有填写密码选项，则密码不改变
-            if (user.getPassword().length() > 1)
+            if (StringUtils.isNotEmpty(user.getPassword()))
             {
                 updateUser.setPassword(MD5Encrypt.MD5Encode(user.getPassword()));
             }
