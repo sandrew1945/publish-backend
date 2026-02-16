@@ -26,6 +26,7 @@ package com.sandrew.publish.core.mybatis;
 
 import com.sandrew.publish.core.bean.PageResult;
 import com.sandrew.publish.core.exception.DAOException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +38,7 @@ import java.util.List;
  * CreateDate  : 2016年5月26日
  * @version    :
  */
+@Slf4j
 public class PageQueryBuilder
 {
 	/**
@@ -70,26 +72,38 @@ public class PageQueryBuilder
 		}
 		catch (NoSuchMethodException | SecurityException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("没有找到所执行的方法名", e);
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("分页查询失败", e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("错误的参数类型", e);
 		}
 		catch (InvocationTargetException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("分页查询失败", e);
 		}
 	}
 
+	/**
+	 *
+	 * Function    : 分页查询
+	 * LastUpdate  : 2016年4月16日
+	 * @param mapper	使用的Mapper
+	 * @param methodName	调用的Mapper方法名
+	 * @param parameters	SQL的参数
+	 * @param curPage		当前页
+	 * @param pagesSize		每页数据量
+	 * @return
+	 * @throws DAOException
+	 */
 	public static <T> PageResult<T> pageQuery(Object mapper, String methodName, Object parameters, int curPage, int pagesSize) throws DAOException
 	{
 		try
@@ -111,22 +125,22 @@ public class PageQueryBuilder
 		}
 		catch (NoSuchMethodException | SecurityException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("没有找到所执行的方法名", e);
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("分页查询失败", e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("错误的参数类型", e);
 		}
 		catch (InvocationTargetException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new DAOException("分页查询失败", e);
 		}
 	}

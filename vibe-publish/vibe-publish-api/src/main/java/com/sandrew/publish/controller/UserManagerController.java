@@ -44,9 +44,7 @@ public class UserManagerController extends BaseController {
             // BO转VO
             PageResult<UserManagerBO> pageResult = userManagerService.userManagerPageQuery(condition, limit, curPage);
 
-            PageResult<UserPageQueryVO> pr = pageResult.convert(originPageResult -> {
-                return userManagerConvertor.toUserPageQueryVO(originPageResult);
-            });
+            PageResult<UserPageQueryVO> pr = pageResult.convert(originPageResult -> userManagerConvertor.toUserPageQueryVO(originPageResult));
             result.requestSuccess(pr);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

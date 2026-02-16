@@ -68,6 +68,7 @@ public class MybatisConfig
         txMap.put("insert*", requiredTx);
         txMap.put("update*", requiredTx);
         txMap.put("delete*", requiredTx);
+        txMap.put("create*", requiredTx);
         txMap.put("*", requiredTx);
         source.setNameMap(txMap);
 

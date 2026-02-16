@@ -91,7 +91,8 @@ public class UserManagerServiceImpl implements UserManagerService
     {
         try
         {
-            return PageQueryBuilder.pageQuery(userManagerMapper, "userManagerPageQuery", condition, curPage, limit);
+            PageResult pageQuery = PageQueryBuilder.pageQuery(userManagerMapper, "userManagerPageQuery", condition, curPage, limit);
+            return pageQuery;
         }
         catch (Exception e)
         {
@@ -111,7 +112,6 @@ public class UserManagerServiceImpl implements UserManagerService
             criteria.andUserCodeEqualTo(user.getUserCode());
             criteria.andIsDeleteEqualTo(Fixcode.IF_TYPE_NO.getCode());
             List<TmUserPO> list = tmUserPOMapper.selectByExample(example);
-
             isExits = (null != list && list.size() > 0) ? true : false;
             if (!isExits)
             {

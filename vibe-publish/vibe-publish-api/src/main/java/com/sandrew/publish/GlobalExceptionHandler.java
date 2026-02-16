@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @ClassName GlobalExceptionHandler
- * @Description 全局异常处理，在本项目中因为由网关对异常进行处理，所以关闭该异常处理逻辑
+ * @Description 全局异常处理
  * @Author summer
  * @Date 2023/12/13 15:59
  **/
