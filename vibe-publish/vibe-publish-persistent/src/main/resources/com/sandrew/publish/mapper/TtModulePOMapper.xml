@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandrew.publish.mapper.TtModulePOMapper">
+
+    <resultMap id="BaseResultMap" type="com.sandrew.publish.model.TtModulePO">
+        <id column="module_id" jdbcType="INTEGER" property="moduleId"/>
+        <result column="repo_id" jdbcType="INTEGER" property="repoId"/>
+        <result column="module_name" jdbcType="VARCHAR" property="moduleName"/>
+        <result column="module_desc" jdbcType="VARCHAR" property="moduleDesc"/>
+        <result column="url_base" jdbcType="VARCHAR" property="urlBase"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_by" jdbcType="INTEGER" property="updateBy"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        module_id, repo_id, module_name, module_desc, url_base, status, is_delete, create_by, create_date, update_by, update_date
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tt_module WHERE module_id = #{moduleId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByExample" parameterType="com.sandrew.publish.model.TtModulePOExample" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tt_module
+        <where>
+            is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        </where>
+        <if test="orderByClause != null">ORDER BY ${orderByClause}</if>
+    </select>
+
+    <select id="countByExample" parameterType="com.sandrew.publish.model.TtModulePOExample" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tt_module
+        <where>
+            is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.sandrew.publish.model.TtModulePO" useGeneratedKeys="true" keyProperty="moduleId">
+        INSERT INTO tt_module (repo_id, module_name, module_desc, url_base, status, is_delete, create_by, create_date, update_by, update_date)
+        VALUES (#{repoId}, #{moduleName}, #{moduleDesc}, #{urlBase}, #{status}, #{isDelete}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sandrew.publish.model.TtModulePO" useGeneratedKeys="true" keyProperty="moduleId">
+        INSERT INTO tt_module
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">repo_id,</if>
+            <if test="moduleName != null">module_name,</if>
+            <if test="moduleDesc != null">module_desc,</if>
+            <if test="urlBase != null">url_base,</if>
+            <if test="status != null">status,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateDate != null">update_date,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">#{repoId},</if>
+            <if test="moduleName != null">#{moduleName},</if>
+            <if test="moduleDesc != null">#{moduleDesc},</if>
+            <if test="urlBase != null">#{urlBase},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sandrew.publish.model.TtModulePO">
+        UPDATE tt_module
+        <set>
+            <if test="moduleName != null">module_name = #{moduleName},</if>
+            <if test="moduleDesc != null">module_desc = #{moduleDesc},</if>
+            <if test="urlBase != null">url_base = #{urlBase},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </set>
+        WHERE module_id = #{moduleId}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sandrew.publish.model.TtModulePO">
+        UPDATE tt_module
+        SET repo_id = #{repoId}, module_name = #{moduleName}, module_desc = #{moduleDesc},
+            url_base = #{urlBase}, status = #{status}, is_delete = #{isDelete},
+            update_by = #{updateBy}, update_date = #{updateDate}
+        WHERE module_id = #{moduleId}
+    </update>
+
+    <update id="updateByExampleSelective" parameterType="map">
+        UPDATE tt_module
+        <set>
+            <if test="record.isDelete != null">is_delete = #{record.isDelete},</if>
+            <if test="record.updateBy != null">update_by = #{record.updateBy},</if>
+            <if test="record.updateDate != null">update_date = #{record.updateDate},</if>
+        </set>
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM tt_module WHERE module_id = #{moduleId,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sandrew.publish.model.TtModulePOExample">
+        DELETE FROM tt_module
+    </delete>
+
+</mapper>

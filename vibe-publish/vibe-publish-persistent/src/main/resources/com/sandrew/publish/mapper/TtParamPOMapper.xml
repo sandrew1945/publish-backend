@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandrew.publish.mapper.TtParamPOMapper">
+
+    <resultMap id="BaseResultMap" type="com.sandrew.publish.model.TtParamPO">
+        <id column="param_id" jdbcType="INTEGER" property="paramId"/>
+        <result column="api_id" jdbcType="INTEGER" property="apiId"/>
+        <result column="param_name" jdbcType="VARCHAR" property="paramName"/>
+        <result column="param_require" jdbcType="BOOLEAN" property="paramRequire"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+        <result column="init_val" jdbcType="VARCHAR" property="initVal"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="father_id" jdbcType="INTEGER" property="fatherId"/>
+        <result column="param_type" jdbcType="INTEGER" property="paramType"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_by" jdbcType="INTEGER" property="updateBy"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        param_id, api_id, param_name, param_require, data_type, init_val, description,
+        father_id, param_type, is_delete, create_by, create_date, update_by, update_date
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tt_param WHERE param_id = #{paramId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByExample" parameterType="com.sandrew.publish.model.TtParamPOExample" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tt_param
+        <where>
+            is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        </where>
+        <if test="orderByClause != null">ORDER BY ${orderByClause}</if>
+    </select>
+
+    <select id="countByExample" parameterType="com.sandrew.publish.model.TtParamPOExample" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tt_param
+        <where>
+            is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.sandrew.publish.model.TtParamPO" useGeneratedKeys="true" keyProperty="paramId">
+        INSERT INTO tt_param (api_id, param_name, param_require, data_type, init_val, description,
+                              father_id, param_type, is_delete, create_by, create_date, update_by, update_date)
+        VALUES (#{apiId}, #{paramName}, #{paramRequire}, #{dataType}, #{initVal}, #{description},
+                #{fatherId}, #{paramType}, #{isDelete}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sandrew.publish.model.TtParamPO" useGeneratedKeys="true" keyProperty="paramId">
+        INSERT INTO tt_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="apiId != null">api_id,</if>
+            <if test="paramName != null">param_name,</if>
+            <if test="paramRequire != null">param_require,</if>
+            <if test="dataType != null">data_type,</if>
+            <if test="initVal != null">init_val,</if>
+            <if test="description != null">description,</if>
+            <if test="fatherId != null">father_id,</if>
+            <if test="paramType != null">param_type,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateDate != null">update_date,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="apiId != null">#{apiId},</if>
+            <if test="paramName != null">#{paramName},</if>
+            <if test="paramRequire != null">#{paramRequire},</if>
+            <if test="dataType != null">#{dataType},</if>
+            <if test="initVal != null">#{initVal},</if>
+            <if test="description != null">#{description},</if>
+            <if test="fatherId != null">#{fatherId},</if>
+            <if test="paramType != null">#{paramType},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sandrew.publish.model.TtParamPO">
+        UPDATE tt_param
+        <set>
+            <if test="paramName != null">param_name = #{paramName},</if>
+            <if test="paramRequire != null">param_require = #{paramRequire},</if>
+            <if test="dataType != null">data_type = #{dataType},</if>
+            <if test="initVal != null">init_val = #{initVal},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="fatherId != null">father_id = #{fatherId},</if>
+            <if test="paramType != null">param_type = #{paramType},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </set>
+        WHERE param_id = #{paramId}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sandrew.publish.model.TtParamPO">
+        UPDATE tt_param
+        SET api_id=#{apiId}, param_name=#{paramName}, param_require=#{paramRequire}, data_type=#{dataType},
+            init_val=#{initVal}, description=#{description}, father_id=#{fatherId}, param_type=#{paramType},
+            is_delete=#{isDelete}, update_by=#{updateBy}, update_date=#{updateDate}
+        WHERE param_id = #{paramId}
+    </update>
+
+    <update id="updateByExampleSelective" parameterType="map">
+        UPDATE tt_param
+        <set>
+            <if test="record.isDelete != null">is_delete = #{record.isDelete},</if>
+            <if test="record.updateBy != null">update_by = #{record.updateBy},</if>
+            <if test="record.updateDate != null">update_date = #{record.updateDate},</if>
+        </set>
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM tt_param WHERE param_id = #{paramId,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sandrew.publish.model.TtParamPOExample">
+        DELETE FROM tt_param
+    </delete>
+
+</mapper>

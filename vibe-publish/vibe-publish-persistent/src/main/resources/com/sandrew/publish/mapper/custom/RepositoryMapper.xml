@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandrew.publish.mapper.custom.RepositoryMapper">
+
+    <!-- Paginated query for repositories, includes comma-separated collaborator names -->
+    <select id="repoPageQuery"
+            resultType="com.sandrew.publish.bean.repository.RepoBO"
+            parameterType="pager">
+        SELECT
+            r.repo_id,
+            r.repo_name,
+            r.repo_desc,
+            r.status,
+            r.create_by,
+            r.create_date,
+            r.update_by,
+            r.update_date,
+            cu.user_name AS creator_name,
+            GROUP_CONCAT(u.user_name ORDER BY u.user_name SEPARATOR ',') AS collaborator_names,
+            GROUP_CONCAT(u.user_id ORDER BY u.user_name SEPARATOR ',') AS collaborator_ids_string
+        FROM tt_repo r
+        LEFT JOIN tm_user cu
+            ON r.create_by = cu.user_id
+            AND cu.is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        LEFT JOIN tr_repo_user ru
+            ON r.repo_id = ru.repo_id
+            AND ru.is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        LEFT JOIN tm_user u
+            ON u.user_id = ru.user_id
+            AND u.is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        WHERE r.is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        <if test="condition.ownerId != null">
+            AND r.create_by = #{condition.ownerId}
+        </if>
+        <if test="condition.repoName != null and condition.repoName != ''">
+            AND r.repo_name LIKE CONCAT('%', #{condition.repoName}, '%')
+        </if>
+        <if test="condition.status != null">
+            AND r.status = #{condition.status}
+        </if>
+        GROUP BY r.repo_id
+        ORDER BY r.repo_id DESC
+    </select>
+
+    <!-- Paginated query for modules under a specific repository -->
+    <select id="modulePageQuery"
+            resultType="com.sandrew.publish.bean.repository.ModuleBO"
+            parameterType="pager">
+        SELECT
+            module_id,
+            repo_id,
+            module_name,
+            module_desc,
+            url_base,
+            status,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        FROM tt_module
+        WHERE is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        <if test="condition.repoId != null">
+            AND repo_id = #{condition.repoId}
+        </if>
+        <if test="condition.moduleName != null and condition.moduleName != ''">
+            AND module_name LIKE CONCAT('%', #{condition.moduleName}, '%')
+        </if>
+        ORDER BY module_id DESC
+    </select>
+
+    <!-- Paginated query for endpoints under a specific module -->
+    <select id="apiPageQuery"
+            resultType="com.sandrew.publish.bean.repository.ApiBO"
+            parameterType="pager">
+        SELECT
+            api_id,
+            repo_id,
+            module_id,
+            api_name,
+            api_path,
+            invoke_type,
+            status_code,
+            status,
+            testable,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        FROM tt_api
+        WHERE is_delete = ${@com.sandrew.publish.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+        <if test="condition.moduleId != null">
+            AND module_id = #{condition.moduleId}
+        </if>
+        <if test="condition.apiName != null and condition.apiName != ''">
+            AND api_name LIKE CONCAT('%', #{condition.apiName}, '%')
+        </if>
+        ORDER BY api_id DESC
+    </select>
+
+</mapper>

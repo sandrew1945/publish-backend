@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandrew.publish.mapper.TrRepoUserPOMapper">
+
+    <resultMap id="BaseResultMap" type="com.sandrew.publish.model.TrRepoUserPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="repo_id" jdbcType="INTEGER" property="repoId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, repo_id, user_id, is_delete, create_by, create_date
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tr_repo_user WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByExample" parameterType="com.sandrew.publish.model.TrRepoUserPOExample" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM tr_repo_user
+        <where>
+            <if test="oredCriteria != null and oredCriteria.size() > 0">
+                <foreach collection="oredCriteria" item="criteria" separator="OR">
+                    <if test="criteria.valid">
+                        <trim prefix="(" prefixOverrides="AND" suffix=")">
+                            <foreach collection="criteria.criteria" item="criterion">
+                                <choose>
+                                    <when test="criterion.noValue">
+                                        AND ${criterion.condition}
+                                    </when>
+                                    <when test="criterion.singleValue">
+                                        AND ${criterion.condition} #{criterion.value}
+                                    </when>
+                                    <when test="criterion.betweenValue">
+                                        AND ${criterion.condition} #{criterion.value} AND #{criterion.secondValue}
+                                    </when>
+                                    <when test="criterion.listValue">
+                                        AND ${criterion.condition}
+                                        <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                            #{listItem}
+                                        </foreach>
+                                    </when>
+                                </choose>
+                            </foreach>
+                        </trim>
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="countByExample" parameterType="com.sandrew.publish.model.TrRepoUserPOExample" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tr_repo_user
+        <where>
+            <if test="oredCriteria != null and oredCriteria.size() > 0">
+                <foreach collection="oredCriteria" item="criteria" separator="OR">
+                    <if test="criteria.valid">
+                        <trim prefix="(" prefixOverrides="AND" suffix=")">
+                            <foreach collection="criteria.criteria" item="criterion">
+                                <choose>
+                                    <when test="criterion.noValue">
+                                        AND ${criterion.condition}
+                                    </when>
+                                    <when test="criterion.singleValue">
+                                        AND ${criterion.condition} #{criterion.value}
+                                    </when>
+                                    <when test="criterion.betweenValue">
+                                        AND ${criterion.condition} #{criterion.value} AND #{criterion.secondValue}
+                                    </when>
+                                    <when test="criterion.listValue">
+                                        AND ${criterion.condition}
+                                        <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                            #{listItem}
+                                        </foreach>
+                                    </when>
+                                </choose>
+                            </foreach>
+                        </trim>
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.sandrew.publish.model.TrRepoUserPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tr_repo_user (repo_id, user_id, is_delete, create_by, create_date)
+        VALUES (#{repoId}, #{userId}, #{isDelete}, #{createBy}, #{createDate})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sandrew.publish.model.TrRepoUserPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tr_repo_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">repo_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createDate != null">create_date,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">#{repoId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createDate != null">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sandrew.publish.model.TrRepoUserPO">
+        UPDATE tr_repo_user
+        <set>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sandrew.publish.model.TrRepoUserPO">
+        UPDATE tr_repo_user SET repo_id = #{repoId}, user_id = #{userId}, is_delete = #{isDelete} WHERE id = #{id}
+    </update>
+
+    <update id="updateByExampleSelective" parameterType="map">
+        UPDATE tr_repo_user
+        <set>
+            <if test="record.isDelete != null">is_delete = #{record.isDelete},</if>
+        </set>
+        <where>
+            <if test="example.oredCriteria != null and example.oredCriteria.size() > 0">
+                <foreach collection="example.oredCriteria" item="criteria" separator="OR">
+                    <if test="criteria.valid">
+                        <trim prefix="(" prefixOverrides="AND" suffix=")">
+                            <foreach collection="criteria.criteria" item="criterion">
+                                <choose>
+                                    <when test="criterion.noValue">
+                                        AND ${criterion.condition}
+                                    </when>
+                                    <when test="criterion.singleValue">
+                                        AND ${criterion.condition} #{criterion.value}
+                                    </when>
+                                    <when test="criterion.betweenValue">
+                                        AND ${criterion.condition} #{criterion.value} AND #{criterion.secondValue}
+                                    </when>
+                                    <when test="criterion.listValue">
+                                        AND ${criterion.condition}
+                                        <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                            #{listItem}
+                                        </foreach>
+                                    </when>
+                                </choose>
+                            </foreach>
+                        </trim>
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM tr_repo_user WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sandrew.publish.model.TrRepoUserPOExample">
+        DELETE FROM tr_repo_user
+        <where>
+            <if test="oredCriteria != null and oredCriteria.size() > 0">
+                <foreach collection="oredCriteria" item="criteria" separator="OR">
+                    <if test="criteria.valid">
+                        <trim prefix="(" prefixOverrides="AND" suffix=")">
+                            <foreach collection="criteria.criteria" item="criterion">
+                                <choose>
+                                    <when test="criterion.noValue">
+                                        AND ${criterion.condition}
+                                    </when>
+                                    <when test="criterion.singleValue">
+                                        AND ${criterion.condition} #{criterion.value}
+                                    </when>
+                                    <when test="criterion.betweenValue">
+                                        AND ${criterion.condition} #{criterion.value} AND #{criterion.secondValue}
+                                    </when>
+                                    <when test="criterion.listValue">
+                                        AND ${criterion.condition}
+                                        <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                            #{listItem}
+                                        </foreach>
+                                    </when>
+                                </choose>
+                            </foreach>
+                        </trim>
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+</mapper>
